@@ -3,7 +3,8 @@ Slitherlink数回的示例程序
 
 程序会自动读取目录下的games.txt(如果存在)
 
-- Ctrl+N 导入指定的排面
+- 随机从games.txt中选取一个盘面
+- Ctrl+N 导入指定的盘面
 - Ctrl+Z 撤销
 - Ctrl+Y 重做
 
