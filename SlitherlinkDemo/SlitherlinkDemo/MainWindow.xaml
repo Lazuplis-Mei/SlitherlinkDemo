@@ -1,0 +1,11 @@
+﻿<Window x:Class="SlitherlinkDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:slc="clr-namespace:SlitherlinkControl;assembly=SlitherlinkControl"
+        mc:Ignorable="d" Loaded="Window_Loaded" KeyUp="Window_KeyUp"
+        Title="SlitherlinkDemo" Height="450" Width="450">
+    <slc:SlitherlinkPanel x:Name="GameBoard" Margin="25" FontFamily="宋体" GameFinished="GameBoard_GameFinished"/>
+
+</Window>

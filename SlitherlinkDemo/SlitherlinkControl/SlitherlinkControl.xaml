@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="SlitherlinkControl.SlitherlinkPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" x:Name="Self"
+             d:DesignHeight="400" d:DesignWidth="400" SizeChanged="UserControl_SizeChanged" >
+    <Grid>
+        <Canvas Background="{Binding ElementName=Self,Path=BackColor}"  x:Name="GameBoard"
+                MouseLeftButtonDown="GameBoard_MouseLeftButtonDown"
+                MouseRightButtonDown="GameBoard_MouseRightButtonDown"/>
+        <UniformGrid IsHitTestVisible="False" x:Name="NumberBoard" Rows="10" Columns="10"/>
+    </Grid>
+</UserControl>

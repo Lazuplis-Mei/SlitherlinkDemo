@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlitherlinkDemo", "SlitherlinkDemo\SlitherlinkDemo.csproj", "{5C25F7C9-935F-4CA2-985A-17FB8CD3DA87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlitherlinkControl", "SlitherlinkControl\SlitherlinkControl.csproj", "{6AF454B5-FCD3-466B-822C-A8CBF34A5194}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C25F7C9-935F-4CA2-985A-17FB8CD3DA87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C25F7C9-935F-4CA2-985A-17FB8CD3DA87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C25F7C9-935F-4CA2-985A-17FB8CD3DA87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C25F7C9-935F-4CA2-985A-17FB8CD3DA87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AF454B5-FCD3-466B-822C-A8CBF34A5194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF454B5-FCD3-466B-822C-A8CBF34A5194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF454B5-FCD3-466B-822C-A8CBF34A5194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF454B5-FCD3-466B-822C-A8CBF34A5194}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3971485-5B83-498E-A7F7-753FD679B898}
+	EndGlobalSection
+EndGlobal
