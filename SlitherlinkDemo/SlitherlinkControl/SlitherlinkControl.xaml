@@ -6,7 +6,7 @@
              mc:Ignorable="d" x:Name="Self"
              d:DesignHeight="400" d:DesignWidth="400" SizeChanged="UserControl_SizeChanged" >
     <Grid>
-        <Canvas Background="{Binding ElementName=Self,Path=BackColor}"  x:Name="GameBoard"
+        <Canvas Background="{Binding ElementName=Self,Path=BackColor}"  x:Name="GameCanvas"
                 MouseLeftButtonDown="GameBoard_MouseLeftButtonDown"
                 MouseRightButtonDown="GameBoard_MouseRightButtonDown"/>
         <UniformGrid IsHitTestVisible="False" x:Name="NumberBoard" Rows="10" Columns="10"/>
