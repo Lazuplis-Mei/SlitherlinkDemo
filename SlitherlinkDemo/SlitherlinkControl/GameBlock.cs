@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LazuplisMei.BinarySerializer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -7,6 +8,7 @@ using System.Windows.Shapes;
 namespace SlitherlinkControl
 {
 
+    [Flags]
     public enum EdgeFlags
     {
         None = 0,
@@ -244,31 +246,32 @@ namespace SlitherlinkControl
 
     }
 
-    public class Step
+    public struct Step
     {
         /// <summary>
         /// 表示该步骤是添加还是移除
         /// </summary>
-        public bool IsAdd { get; }
+        public bool IsAdd { get; set; }
         /// <summary>
         /// 表示该步骤是线段还是x标志
         /// </summary>
-        public bool IsLine { get; }
+        public bool IsLine { get; set; }
         /// <summary>
         /// 表示该步骤操作的边界
         /// </summary>
-        public EdgeFlags EdgeFlags { get; }
+        public EdgeFlags EdgeFlags { get; set; }
         /// <summary>
         /// 该步骤操作的格子的横坐标(列)
         /// </summary>
-        public int X { get; }
+        public int X { get; set; }
         /// <summary>
         /// 该步骤操作的格子的纵坐标(行)
         /// </summary>
-        public int Y { get; }
+        public int Y { get; set; }
         /// <summary>
         /// 一个操作步骤
         /// </summary>
+        [BinaryConstructor]
         public Step(int x, int y, EdgeFlags edge, bool add, bool line)
         {
             IsAdd = add;

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LazuplisMei.BinarySerializer;
 
 namespace SlitherlinkControl
 {
@@ -262,20 +263,7 @@ namespace SlitherlinkControl
             if (_History.Count > 0)
             {
                 var step = _History.Pop();
-                if (step.IsAdd)
-                {
-                    if (step.IsLine)
-                        BlockRemoveEdge(step.X, step.Y, step.EdgeFlags);
-                    else
-                        BlockRemoveCross(step.X, step.Y, step.EdgeFlags);
-                }
-                else
-                {
-                    if (step.IsLine)
-                        BlockAddEdge(step.X, step.Y, step.EdgeFlags);
-                    else
-                        BlockAddCross(step.X, step.Y, step.EdgeFlags);
-                }
+                ApplyStep(step, true);
                 _Future.Push(step);
             }
         }
@@ -288,20 +276,7 @@ namespace SlitherlinkControl
             if (_Future.Count > 0)
             {
                 var step = _Future.Pop();
-                if (step.IsAdd)
-                {
-                    if (step.IsLine)
-                        BlockAddEdge(step.X, step.Y, step.EdgeFlags);
-                    else
-                        BlockAddCross(step.X, step.Y, step.EdgeFlags);
-                }
-                else
-                {
-                    if (step.IsLine)
-                        BlockRemoveEdge(step.X, step.Y, step.EdgeFlags);
-                    else
-                        BlockRemoveCross(step.X, step.Y, step.EdgeFlags);
-                }
+                ApplyStep(step);
                 _History.Push(step);
             }
         }
@@ -431,6 +406,27 @@ namespace SlitherlinkControl
             }
 
             return str.ToString();
+        }
+
+        /// <summary>
+        /// 获得当前盘面，包括数字和步骤
+        /// </summary>
+        public virtual byte[] GetBoard()
+        {
+            return Serializer.Serialize((GetBoardString(), _History.ToArray().Reverse()), true);
+        }
+
+        /// <summary>
+        /// 加载盘面，包括数字和步骤
+        /// </summary>
+        public virtual void SetBoard(byte[] board)
+        {
+            (string str, List<Step> steps) = Serializer.Deserialize<(string, List<Step>)>(board, true);
+            LoadNumbers(str);
+            foreach (var step in steps)
+            {
+                ApplyStep(step);
+            }
         }
 
         #endregion
@@ -789,6 +785,27 @@ namespace SlitherlinkControl
             Board[x, y].Crosses.RemoveObject(edge);
 
             TryHighlightError();
+        }
+
+        /// <summary>
+        /// 应用步骤
+        /// </summary>
+        private void ApplyStep(Step step, bool reverse = false)
+        {
+            if (reverse ? !step.IsAdd : step.IsAdd)
+            {
+                if (step.IsLine)
+                    BlockAddEdge(step.X, step.Y, step.EdgeFlags);
+                else
+                    BlockAddCross(step.X, step.Y, step.EdgeFlags);
+            }
+            else if (reverse ? step.IsAdd : !step.IsAdd)
+            {
+                if (step.IsLine)
+                    BlockRemoveEdge(step.X, step.Y, step.EdgeFlags);
+                else
+                    BlockRemoveCross(step.X, step.Y, step.EdgeFlags);
+            }
         }
 
         #endregion

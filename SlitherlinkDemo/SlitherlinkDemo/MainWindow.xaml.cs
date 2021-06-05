@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,8 @@ namespace SlitherlinkDemo
 
         readonly Random _random = new Random();
         string[] _loadedGames;
-
+        SaveFileDialog saveFileDlg = new SaveFileDialog();
+        OpenFileDialog openFileDlg = new OpenFileDialog();
         private void LoadRandomGame()
         {
             GameBoard.LoadNumbers(_loadedGames?[_random.Next(_loadedGames.Length)]);
@@ -74,6 +76,20 @@ namespace SlitherlinkDemo
             else if (e.Key == Key.Y && ctrl)
             {
                 GameBoard.Redo();
+            }
+            else if (e.Key == Key.S && ctrl)
+            {
+                if (saveFileDlg.ShowDialog() == true)
+                {
+                    File.WriteAllBytes(saveFileDlg.FileName, GameBoard.GetBoard());
+                }
+            }
+            else if (e.Key == Key.L && ctrl)
+            {
+                if (openFileDlg.ShowDialog() == true)
+                {
+                    GameBoard.SetBoard(File.ReadAllBytes(openFileDlg.FileName));
+                }
             }
         }
     }
