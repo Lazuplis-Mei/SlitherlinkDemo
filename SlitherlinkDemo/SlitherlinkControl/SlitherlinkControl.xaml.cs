@@ -265,6 +265,10 @@ namespace SlitherlinkControl
                 var step = _History.Pop();
                 ApplyStep(step, true);
                 _Future.Push(step);
+                if (!TryHighlightError())
+                {
+                    CheckFinshed();
+                }
             }
         }
 
@@ -278,6 +282,10 @@ namespace SlitherlinkControl
                 var step = _Future.Pop();
                 ApplyStep(step);
                 _History.Push(step);
+                if (!TryHighlightError())
+                {
+                    CheckFinshed();
+                }
             }
         }
 
@@ -355,7 +363,10 @@ namespace SlitherlinkControl
                     _History.Push(new Step(x, y, edge, true, true));
                 }
             }
-
+            if (!TryHighlightError())
+            {
+                CheckFinshed();
+            }
             _Future.Clear();
         }
 
@@ -384,7 +395,10 @@ namespace SlitherlinkControl
                     _History.Push(new Step(x, y, edge, true, false));
                 }
             }
-
+            if (!TryHighlightError())
+            {
+                CheckFinshed();
+            }
             _Future.Clear();
         }
 
@@ -430,6 +444,7 @@ namespace SlitherlinkControl
                 _History.Push(step);
             }
             IsFinished = false;
+            TryHighlightError();
         }
 
         #endregion
@@ -669,10 +684,6 @@ namespace SlitherlinkControl
                     break;
             }
 
-            if (!TryHighlightError())
-            {
-                CheckFinshed();
-            }
         }
 
         /// <summary>
@@ -706,10 +717,6 @@ namespace SlitherlinkControl
                     break;
             }
             Board[x, y].Lines.RemoveObject(edge);
-            if (!TryHighlightError())
-            {
-                CheckFinshed();
-            }
         }
 
         /// <summary>
@@ -750,8 +757,6 @@ namespace SlitherlinkControl
                 default:
                     break;
             }
-
-            TryHighlightError();
         }
 
         /// <summary>
@@ -786,8 +791,6 @@ namespace SlitherlinkControl
             }
 
             Board[x, y].Crosses.RemoveObject(edge);
-
-            TryHighlightError();
         }
 
         /// <summary>
