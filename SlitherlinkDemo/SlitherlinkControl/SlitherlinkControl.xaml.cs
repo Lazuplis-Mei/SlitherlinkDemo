@@ -413,7 +413,7 @@ namespace SlitherlinkControl
         /// </summary>
         public virtual byte[] GetBoard()
         {
-            return Serializer.Serialize((GetBoardString(), _History.ToArray().Reverse()), true);
+            return Serializer.Serialize((IsFinished, GetBoardString(), _History.ToArray().Reverse()), true);
         }
 
         /// <summary>
@@ -421,12 +421,15 @@ namespace SlitherlinkControl
         /// </summary>
         public virtual void SetBoard(byte[] board)
         {
-            (string str, List<Step> steps) = Serializer.Deserialize<(string, List<Step>)>(board, true);
+            (bool finished, string str, List<Step> steps) = Serializer.Deserialize<(bool, string, List<Step>)>(board, true);
             LoadNumbers(str);
+            IsFinished = finished;
             foreach (var step in steps)
             {
                 ApplyStep(step);
+                _History.Push(step);
             }
+            IsFinished = false;
         }
 
         #endregion
@@ -838,6 +841,19 @@ namespace SlitherlinkControl
 
         #endregion
 
+        private void GameCanvas_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effects = DragDropEffects.Link;
+            else
+                e.Effects = DragDropEffects.None;
+        }
+
+        private void GameCanvas_Drop(object sender, DragEventArgs e)
+        {
+            string fileName = ((Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            SetBoard(System.IO.File.ReadAllBytes(fileName));
+        }
     }
 
 }

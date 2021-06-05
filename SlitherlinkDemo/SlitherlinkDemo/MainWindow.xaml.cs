@@ -50,7 +50,7 @@ namespace SlitherlinkDemo
             MessageBox.Show("完成!", "信息", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void Window_KeyUp(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             bool ctrl = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
             if (e.Key == Key.N)
@@ -64,7 +64,7 @@ namespace SlitherlinkDemo
                         GameBoard.LoadNumbers(inputDlg.TBInput.Text);
                     }
                 }
-                else
+                else if(!e.IsRepeat)
                 {
                     LoadRandomGame();
                 }
