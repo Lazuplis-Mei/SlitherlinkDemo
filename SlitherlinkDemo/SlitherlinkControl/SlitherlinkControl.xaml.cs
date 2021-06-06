@@ -239,9 +239,13 @@ namespace SlitherlinkControl
                 {
                     if (i < Columns && j < Rows && Board?[i, j] != null)
                     {
-                        Board[i, j].UpdateEdgePos();
-                        AddToBoard(Board[i, j].Lines.GetObjects());
-                        AddToBoard(Board[i, j].Crosses.GetObjects());
+                        //更有效率，大概
+                        if (i == 0 || j == 0 || i == Columns - 1 || j == Rows - 1 || (i + j) % 2 == 1)
+                        {
+                            Board[i, j].UpdateEdgePos();
+                            AddToBoard(Board[i, j].Lines.GetObjects());
+                            AddToBoard(Board[i, j].Crosses.GetObjects());
+                        }
                     }
                     AddGridDot(i, j);
                 }
@@ -265,7 +269,7 @@ namespace SlitherlinkControl
                 var step = _History.Pop();
                 ApplyStep(step, true);
                 _Future.Push(step);
-                if (!TryHighlightError())
+                if (!TryHighlightError(step.X, step.Y))
                 {
                     CheckFinshed();
                 }
@@ -282,7 +286,7 @@ namespace SlitherlinkControl
                 var step = _Future.Pop();
                 ApplyStep(step);
                 _History.Push(step);
-                if (!TryHighlightError())
+                if (!TryHighlightError(step.X, step.Y))
                 {
                     CheckFinshed();
                 }
@@ -330,7 +334,7 @@ namespace SlitherlinkControl
                     if (!block.IsCorrect())
                         return;
                 }
-                if (CheckSingleLoop())
+                if (GetAllLines().IsSingleLoop())
                 {
                     IsFinished = true;
                     GameFinished?.Invoke(this);
@@ -363,7 +367,7 @@ namespace SlitherlinkControl
                     _History.Push(new Step(x, y, edge, true, true));
                 }
             }
-            if (!TryHighlightError())
+            if (!TryHighlightError(x, y))
             {
                 CheckFinshed();
             }
@@ -395,7 +399,7 @@ namespace SlitherlinkControl
                     _History.Push(new Step(x, y, edge, true, false));
                 }
             }
-            if (!TryHighlightError())
+            if (!TryHighlightError(x, y))
             {
                 CheckFinshed();
             }
@@ -537,7 +541,6 @@ namespace SlitherlinkControl
         /// <summary>
         /// 如果存在错误，高亮错误并返回<see langword="true"/>
         /// </summary>
-        /// <returns></returns>
         private bool TryHighlightError()
         {
             bool hasError = false;
@@ -569,27 +572,57 @@ namespace SlitherlinkControl
                     line.Stroke = LineBrush;
                 }
             }
-
             return hasError;
         }
 
         /// <summary>
-        /// 检测是否是单一的回路
+        /// 如果存在错误，高亮错误并返回<see langword="true"/>
         /// </summary>
-        private bool CheckSingleLoop()
+        private bool TryHighlightError(int x, int y)
         {
-            var allLines = GetAllLines();
-
-            var line = allLines.First();
-            int crossCount = 2;
-            while (allLines.Count > 1)
+            bool HighlightInternal(bool hasError, GameBlock block)
             {
-                allLines.Remove(line);
-                if (allLines.GetConnectedLine(line, out line) != crossCount)
-                    return false;
-                crossCount = 1;
+                if (block.IsPreviewInvaild())
+                {
+                    block.Number.Foreground = ErrorBrush;
+                    hasError = true;
+                }
+                else
+                {
+                    block.Number.Foreground = Brushes.Black;
+                }
+
+                return hasError;
             }
-            return true;
+
+            bool hasError = false;
+
+            hasError = HighlightInternal(hasError, Board[x, y]);
+            if (x - 1 >= 0)
+                hasError = HighlightInternal(hasError, Board[x - 1, y]);
+            if (x + 1 < Columns)
+                hasError = HighlightInternal(hasError, Board[x + 1, y]);
+            if (y - 1 >= 0)
+                hasError = HighlightInternal(hasError, Board[x, y - 1]);
+            if (y + 1 < Rows)
+                hasError = HighlightInternal(hasError, Board[x, y + 1]);
+
+
+            var allLines = GetAllLines();
+            foreach (var line in allLines)
+            {
+                if (allLines.LineCrossed(line))
+                {
+                    line.Stroke = ErrorBrush;
+                    hasError = true;
+                }
+                else
+                {
+                    line.Stroke = LineBrush;
+                }
+            }
+            return hasError;
+
         }
 
         /// <summary>
@@ -842,8 +875,6 @@ namespace SlitherlinkControl
             TryAddLineOrCross(e.GetPosition(GameCanvas), TryAddCross);
         }
 
-        #endregion
-
         private void GameCanvas_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -857,6 +888,9 @@ namespace SlitherlinkControl
             string fileName = ((Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
             SetBoard(System.IO.File.ReadAllBytes(fileName));
         }
+
+        #endregion
+
     }
 
 }

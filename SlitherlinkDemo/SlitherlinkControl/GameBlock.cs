@@ -315,9 +315,30 @@ namespace SlitherlinkControl
 
     public static class LinesExtension
     {
+        /// <summary>
+        /// 判断线段的集合是否形成单一的回路
+        /// </summary>
+        public static bool IsSingleLoop(this ICollection<Line> self)
+        {
+            if (self.Count >= 4)
+            {
+                var line = self.First();
+                int crossCount = 2;
+                while (true)
+                {
+                    self.Remove(line);
+                    if (self.Count == 0)
+                        return true;
+                    if (self.GetConnectedLine(line, out line) != crossCount)
+                        break;
+                    crossCount = 1;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
-        /// 获得在线段的集合中与指定线段首尾相连的线段数目，并返回第一个相连的线段
+        /// 获得在线段的集合中与指定线段首尾相连的线段数目(包含自身)，并返回第一个相连的线段
         /// </summary>
         public static int GetConnectedLine(this IEnumerable<Line> self, Line line, out Line firstConnectedLine)
         {
@@ -331,7 +352,7 @@ namespace SlitherlinkControl
         }
 
         /// <summary>
-        /// 在线段的集合中，是否存在大于2根线段与指定线段的一端相连，即线段在此处分叉
+        /// 在线段的集合中，是否存在大于2根线段与指定线段的一端相连(包含自身)，即线段在此处分叉
         /// </summary>
         public static bool LineCrossed(this IEnumerable<Line> self, Line line)
         {
